@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submerge__l - 讨论区</title>
+    <meta name="description" content="Submerge__l 专属讨论区，分享交流，共同成长">
+    <style>
+        /* 全局样式重置+基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        ul, li {
+            list-style: none;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            font-size: 14px;
+        }
+
+        /* 主题色：核心橙色 完全贴合需求 */
+        :root {
+            --main-color: #ff7c24;
+            --main-hover: #ff6a00;
+            --main-light: #fff5ef;
+            --border-color: #e5e5e5;
+            --text-gray: #666;
+            --text-light: #999;
+        }
+
+        /* 头部导航栏 - 复刻原版置顶+橙色高亮风格 */
+        header {
+            background-color: #fff;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.05);
+        }
+        .header-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--main-color);
+        }
+        .logo span {
+            font-size: 16px;
+            color: var(--text-gray);
+            margin-left: 8px;
+            font-weight: normal;
+        }
+        .nav a {
+            margin: 0 15px;
+            font-size: 16px;
+        }
+        .nav a:hover, .nav a.active {
+            color: var(--main-color);
+            border-bottom: 2px solid var(--main-color);
+            padding-bottom: 3px;
+        }
+        .user-info a {
+            color: var(--main-color);
+            margin-left: 10px;
+        }
+
+        /* 主体内容区 - 左右分栏 原版经典布局 */
+        main {
+            display: flex;
+            margin-top: 20px;
+            gap: 20px;
+        }
+        .main-content {
+            flex: 1;
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+        .sidebar {
+            width: 260px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* 发帖区 */
+        .post-box {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .post-input {
+            width: 100%;
+            height: 60px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 10px;
+            resize: none;
+            outline: none;
+            margin-bottom: 10px;
+            transition: border 0.2s;
+        }
+        .post-input:focus {
+            border-color: var(--main-color);
+        }
+        .post-btn {
+            background-color: var(--main-color);
+            color: #fff;
+            float: right;
+        }
+        .post-btn:hover {
+            background-color: var(--main-hover);
+        }
+
+        /* 帖子列表 - 核心板块 原版样式1:1复刻 */
+        .post-list {
+            padding: 0 15px;
+        }
+        .post-item {
+            padding: 15px 0;
+            border-bottom: 1px dashed var(--border-color);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            transition: background 0.2s;
+        }
+        .post-item:hover {
+            background-color: var(--main-light);
+        }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--main-color);
+            color: #fff;
+            text-align: center;
+            line-height: 40px;
+            font-size: 18px;
+        }
+        .post-content {
+            flex: 1;
+        }
+        .post-title {
+            font-size: 17px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+        .post-desc {
+            color: var(--text-gray);
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .post-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        .post-meta .tags {
+            color: var(--main-color);
+        }
+
+        /* 侧边栏样式 */
+        .side-card {
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+        }
+        .side-title {
+            font-size: 16px;
+            font-weight: bold;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--main-color);
+            margin-bottom: 15px;
+        }
+        .hot-tag {
+            display: inline-block;
+            background-color: var(--main-light);
+            color: var(--main-color);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin: 0 5px 8px 0;
+        }
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .stat-num {
+            color: var(--main-color);
+            font-weight: bold;
+        }
+
+        /* 底部信息 */
+        footer {
+            margin-top: 30px;
+            padding: 20px 0;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 13px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* 响应式适配 - 手机端自动适配布局 */
+        @media (max-width: 992px) {
+            main {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+            }
+            .side-card {
+                flex: 1;
+            }
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                flex-direction: column;
+            }
+            .nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部导航 -->
+    <header>
+        <div class="container header-main">
+            <div class="logo">Submerge__l <span>讨论区</span></div>
+            <div class="nav">
+                <a href="#" class="active">首页</a>
+                <a href="#">精华</a>
+                <a href="#">分类</a>
+                <a href="#">关于</a>
+            </div>
+            <div class="user-info">
+                <a href="#">登录</a>
+                <a href="#">注册</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主体内容 -->
+    <div class="container">
+        <main>
+            <div class="main-content">
+                <!-- 发帖区域 -->
+                <div class="post-box">
+                    <textarea class="post-input" placeholder="分享你的想法、问题或见解..."></textarea>
+                    <button class="btn post-btn">发布讨论</button>
+                </div>
+                <!-- 帖子列表 -->
+                <div class="post-list">
+                    <div class="post-item">
+                        <div class="avatar">S</div>
+                        <div class="post-content">
+                            <div class="post-title">这个讨论区的橙色主题太好看了，和 boyacoding.cn 一模一样！</div>
+                            <div class="post-desc">请问这个页面的样式是怎么做到高度还原的？求一份详细的教程，感谢分享～</div>
+                            <div class="post-meta">
+                                <span>发布者: Submerge__l · 刚刚</span>
+                                <span class="tags">#主题分享 #前端</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post-item">
+                        <div class="avatar">L</div>
+                        <div class="post-content">
+                            <div class="post-title">求推荐好用的前端开发工具</div>
+                            <div class="post-desc">最近在做静态页面开发，想找一些高效的编辑器和插件，大家有什么好的推荐吗？</div>
+                            <div class="post-meta">
+                                <span>发布者: 路人甲 · 10分钟前</span>
+                                <span class="tags">#工具推荐 #开发</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post-item">
+                        <div class="avatar">C</div>
+                        <div class="post-content">
+                            <div class="post-title">HTML+CSS零基础入门学习路线</div>
+                            <div class="post-desc">零基础想入门前端，从HTML和CSS开始，有没有系统的学习路线和资料推荐？</div>
+                            <div class="post-meta">
+                                <span>发布者: 编程小白 · 30分钟前</span>
+                                <span class="tags">#学习路线 #零基础</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <div class="side-card">
+                    <div class="side-title">讨论区统计</div>
+                    <div class="stat-item">总帖子数 <span class="stat-num">286</span></div>
+                    <div class="stat-item">今日发帖 <span class="stat-num">15</span></div>
+                    <div class="stat-item">注册用户 <span class="stat-num">1240</span></div>
+                    <div class="stat-item">在线人数 <span class="stat-num">68</span></div>
+                </div>
+                <div class="side-card">
+                    <div class="side-title">热门标签</div>
+                    <div class="tags-group">
+                        <span class="hot-tag">前端开发</span>
+                        <span class="hot-tag">HTML/CSS</span>
+                        <span class="hot-tag">编程学习</span>
+                        <span class="hot-tag">问题求助</span>
+                        <span class="hot-tag">资源分享</span>
+                        <span class="hot-tag">技术交流</span>
+                        <span class="hot-tag">Submerge__l</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 底部 -->
+    <footer>
+        <div class="container">
+            © 2026 Submerge__l 讨论区 | 复刻 boyacoding.cn 风格 · 橙色主题版
+        </div>
+    </footer>
+
+    <script>
+        // 简单的交互功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 发布按钮点击事件
+            const postBtn = document.querySelector('.post-btn');
+            const postInput = document.querySelector('.post-input');
+            
+            postBtn.addEventListener('click', function() {
+                if (postInput.value.trim() === '') {
+                    alert('请输入帖子内容');
+                    postInput.focus();
+                    return;
+                }
+                
+                // 创建新帖子
+                const postList = document.querySelector('.post-list');
+                const newPost = document.createElement('div');
+                newPost.className = 'post-item';
+                newPost.innerHTML = `
+                    <div class="avatar">你</div>
+                    <div class="post-content">
+                        <div class="post-title">新发布的帖子</div>
+                        <div class="post-desc">${postInput.value}</div>
+                        <div class="post-meta">
+                            <span>发布者: 你 · 刚刚</span>
+                            <span class="tags">#新帖</span>
+                        </div>
+                    </div>
+                `;
+                
+                // 插入到列表顶部
+                postList.insertBefore(newPost, postList.firstChild);
+                
+                // 清空输入框
+                postInput.value = '';
+                alert('帖子发布成功！');
+                
+                // 更新统计数字
+                const totalPosts = document.querySelectorAll('.stat-item')[0].querySelector('.stat-num');
+                const todayPosts = document.querySelectorAll('.stat-item')[1].querySelector('.stat-num');
+                
+                totalPosts.textContent = parseInt(totalPosts.textContent) + 1;
+                todayPosts.textContent = parseInt(todayPosts.textContent) + 1;
+            });
+            
+            // 标签点击事件
+            const hotTags = document.querySelectorAll('.hot-tag');
+            hotTags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    postInput.value = `关于"${this.textContent}"的话题讨论：`;
+                    postInput.focus();
+                });
+            });
+            
+            // 导航栏点击效果
+            const navLinks = document.querySelectorAll('.nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 简单切换内容
+                    const postTitles = document.querySelectorAll('.post-title');
+                    const titles = [
+                        '欢迎来到Submerge__l讨论区',
+                        '精华帖子推荐',
+                        '分类话题讨论',
+                        '关于本论坛'
+                    ];
+                    
+                    const index = Array.from(navLinks).indexOf(this);
+                    if (index < titles.length && postTitles.length > 0) {
+                        postTitles[0].textContent = titles[index];
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
